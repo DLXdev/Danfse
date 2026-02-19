@@ -1,125 +1,103 @@
-# Emissor NFSe Nacional
+# Gerador de DANFSE
 
-Sistema de emissão de Nota Fiscal de Serviço Eletrônica (NFSe) compatível com o padrão nacional do SPED (Sistema Público de Escrituração Digital).
-
-## Descrição
-
-Este projeto implementa um emissor de NFSe completo que permite a geração, assinatura digital, validação e transmissão de documentos fiscais de serviço conforme as especificações do governo brasileiro. O sistema é compatível com os padrões EFD-Reinf e utiliza os esquemas XML oficiais para garantir a conformidade com as exigências legais.
-
-## Características
-
-- Geração de documentos NFSe/DPS conforme especificações do SPED
-- Assinatura digital de documentos XML com certificados ICP-Brasil (A1/A3)
-- Validação de documentos com esquemas XSD (versões 1.00 e 1.01)
-- Compressão GZip e codificação Base64 para transmissão
-- Comunicação segura via HTTPS com autenticação mútua TLS
-- Suporte a diferentes ambientes (Produção e Homologação)
-- Interface gráfica em Windows Forms para fácil operação
+Aplicação desktop desenvolvida em C# que converte arquivos XML de NFS-e (Nota Fiscal de Serviços Eletrônica) em arquivos PDF de DANFSE (Documento Auxiliar da Nota Fiscal de Serviços Eletrônica), facilitando a geração e armazenamento desses documentos fiscais.
 
 ## Tecnologias Utilizadas
 
-- .NET Framework
-- C# Windows Forms
-- XML Digital Signature (XMLDSIG)
-- REST API para comunicação com serviços governamentais
-- JSON para serialização de dados
-- NuGet packages:
-  - Newtonsoft.Json
-  - ClosedXML (para manipulação de arquivos Excel)
-  - AngleSharp (para processamento HTML)
+- **C#**: Linguagem de programação principal
+- **.NET Framework 4.8**: Plataforma de desenvolvimento
+- **Windows Forms**: Framework para criação da interface gráfica
+- **XML Processing**: Bibliotecas nativas do .NET para processamento de arquivos XML
+- **WebClient**: Para download dos arquivos PDF
+- **X.509 Certificates**: Suporte a certificados digitais para autenticação
 
 ## Estrutura do Projeto
 
 ```
-efd-reinf/
-├── efd-reinf/              # Projeto principal (UI)
-│   ├── frmHome.cs          # Interface principal
-│   └── Program.cs          # Ponto de entrada da aplicação
-├── efdreinf.core/          # Camada de lógica de negócios
-│   ├── models/             # Modelos de dados
-│   ├── services/           # Serviços principais
-│   ├── helpers/            # Classes auxiliares
-│   └── nfse.core.csproj    # Arquivo de projeto
-└── packages/               # Dependências NuGet
+Danfse/
+├── Form1.cs              # Classe principal da interface gráfica
+├── Form1.Designer.cs     # Código gerado automaticamente para elementos visuais
+├── Form1.resx           # Recursos de interface localizados
+├── CustomWebClient.cs   # Implementação personalizada de WebClient com suporte a certificados
+├── PasswordForm.cs      # Formulário para entrada de senha de certificado digital
+├── PasswordForm.resx    # Recursos do formulário de senha
+├── Program.cs           # Ponto de entrada da aplicação
+├── Danfse.csproj        # Arquivo de projeto
+└── README.md            # Documentação do projeto
 ```
 
 ## Funcionalidades Principais
 
-### Geração de Documentos
-- Criação de documentos DPS (Documento de Prestação de Serviço)
-- Preenchimento automático de dados cadastrais
-- Cálculo de tributos e retenções
-- Validação estrutural dos dados
-
-### Assinatura Digital
-- Suporte a certificados A1 (arquivo) e A3 (hardware)
-- Implementação do padrão XMLDSIG
-- Algoritmos SHA-1 e SHA-256
-- Validação de integridade pós-assinatura
-
-### Transmissão
-- Compressão GZip de documentos
-- Codificação Base64 para transporte
-- Comunicação HTTPS com servidores da SEFIN
-- Tratamento de respostas e erros
-
-### Validação
-- Validação XSD em tempo real
-- Verificação de conformidade com schemas oficiais
-- Detecção de erros comuns antes da transmissão
+- **Processamento em lote**: Converte múltiplos arquivos XML para PDF em uma única operação
+- **Extração automática de chave de acesso**: Identifica e extrai a chave de acesso dos arquivos XML
+- **Download de DANFSE**: Acessa o serviço oficial para gerar os documentos PDF
+- **Suporte a certificados digitais**: Permite autenticação com certificados .pfx/.p12
+- **Interface intuitiva**: Design limpo com controles para seleção de pastas e monitoramento de progresso
+- **Log de processamento**: Registra detalhes do processamento em arquivos de log
+- **Tratamento de erros robusto**: Implementa estratégias de retry para lidar com problemas de rede
+- **Validação de certificados**: Verifica a validade e integridade dos certificados digitais
 
 ## Instalação
 
-1. Clone o repositório:
-```bash
-git clone https://github.com/seu-usuario/emissor_nfse_nacional.git
-```
+### Pré-requisitos
 
+- Microsoft .NET Framework 4.8
+- Sistema operacional Windows 7 ou superior
+
+### Passos para instalação
+
+1. Clone ou baixe este repositório
 2. Abra a solução no Visual Studio
+3. Compile o projeto
+4. Execute o executável gerado
 
-3. Restaure os pacotes NuGet:
-```bash
-nuget restore
-```
-
-4. Compile a solução
-
-5. Configure os certificados digitais e dados da empresa
+Alternativamente, você pode executar diretamente o executável compilado se disponível.
 
 ## Configuração
 
-O sistema requer as seguintes configurações:
+Não é necessária configuração adicional além da instalação do .NET Framework. O aplicativo utiliza as seguintes configurações padrão:
 
-- Certificado digital ICP-Brasil (A1 ou A3)
-- Dados cadastrais da empresa emissora
-- Configurações de ambiente (Produção/Homologação)
-- Credenciais de acesso (quando necessário)
+- Timeout de requisição: 60 segundos
+- Timeout de leitura/gravação: 120 segundos
+- Limite de conexões: 10
+- Protocolos de segurança: TLS 1.0, TLS 1.1, TLS 1.2
+
+Para utilizar certificados digitais, prepare seus arquivos .pfx/.p12 com as respectivas senhas.
 
 ## Uso
 
-1. Inicie a aplicação
-2. Configure os dados da empresa
-3. Carregue ou crie um novo documento NFSe
-4. Preencha os dados do serviço prestado
-5. Assine digitalmente o documento
-6. Valide o documento
-7. Transmita para o ambiente governamental
+1. **Selecionar pasta de origem**: Clique em "Selecionar Origem" para escolher a pasta contendo os arquivos XML de NFS-e
+2. **Selecionar pasta de destino**: Clique em "Selecionar Destino" para escolher onde salvar os arquivos PDF gerados
+3. **Carregar certificado digital (opcional)**: Clique em "Selecionar Certificado" para carregar um certificado digital (.pfx/.p12) necessário para autenticação
+4. **Gerar DANFSE**: Clique no botão "GERAR DANFSE" para iniciar o processo de conversão
+5. **Monitorar progresso**: Observe a barra de progresso e as mensagens de status durante o processamento
+
+O aplicativo também permite testar chaves de acesso individuais através da funcionalidade "Testar Chave".
 
 ## Contribuição
 
 1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+2. Crie uma branch para sua feature (`git checkout -b feature/NovaFeature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona NovaFeature'`)
+4. Push para a branch (`git push origin feature/NovaFeature`)
 5. Abra um Pull Request
 
+Sugestões de melhorias bem-vindas, especialmente nas áreas de:
+- Melhoria na extração de chaves de acesso de diferentes formatos XML
+- Adição de opções de configuração avançadas
+- Melhoria na interface do usuário
+- Implementação de testes automatizados
+
 ## Contato
+Para dúvidas, sugestões ou suporte técnico, entre em contato:
 
 DLX - devdlxtecnologia@gmail.com
 
 Julia - jcristinny@protonmail.com
 
+Link do Projeto: https://github.com/DLXdev/Danfse
 
+- Reporte problemas no GitHub Issues
+- Envie sugestões de melhorias através de Pull Requests
 
-Link do Projeto: https://github.com/DLXdev/emissor_nfse_nacional
-```
+Projeto criado para facilitar a geração de DANFSE a partir de arquivos XML de NFS-e.
